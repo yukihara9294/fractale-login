@@ -1,39 +1,74 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  </head>
-  <body>
-    <div id="loginBox">
-      <button onclick="login()">GitHubで参加する</button>
-    </div>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fractale Login</title>
 
-    <script>
-      const supabase = supabase.createClient(
-        "https://◯◯◯◯.supabase.co",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBscWJja2pkbHdhcGdqcW16cW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMwNjE3MzYsImV4cCI6MjA2ODYzNzczNn0.5LHyatH__N5lnI35jCOBXqCaHJyLv421oRZk-y9rPQM"
-      );
+  <!-- Supabase JSライブラリを読み込み -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-      async function login() {
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: 'github',
-          options: {
-            redirectTo: 'https://fractale.studio.site/competitions'
-          }
-        });
-        if (error) alert("ログインに失敗しました");
-      }
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: white;
+      font-family: 'IBM Plex Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #00e5d3;
+      color: black;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #loginBox { display: none; }
+  </style>
+</head>
+<body>
+  <div id="loginBox">
+    <h1>>_ Fractale に参加する</h1>
+    <button onclick="login()">GitHub でログイン</button>
+  </div>
 
-      async function check() {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          window.location.href = "https://fractale.studio.site/competitions";
-        } else {
-          document.getElementById("loginBox").style.display = "block";
+  <script>
+    // 別名の変数名（sb）を使って supabase インスタンスを定義
+    let sb = supabase.createClient(
+      "https://plqbckjdlwapgjqmzqoh.supabase.co", // あなたの Supabase URL
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBscWJja2pkbHdhcGdqcW16cW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMwNjE3MzYsImV4cCI6MjA2ODYzNzczNn0.5LHyatH__N5lnI35jCOBXqCaHJyLv421oRZk-y9rPQM" // あなたの Supabase anon 公開キー
+    );
+
+    async function login() {
+      const { error } = await sb.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: 'https://tan334810.studio.site/competitions'
         }
-      }
+      });
+      if (error) alert("ログインに失敗しました");
+    }
 
-      window.addEventListener("DOMContentLoaded", check);
-    </script>
-  </body>
+    async function checkSessionAndRoute() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session?.user) {
+        window.location.href = "https://tan334810.studio.site/competitions";
+      } else {
+        document.getElementById("loginBox").style.display = "block";
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', checkSessionAndRoute);
+  </script>
+</body>
 </html>
