@@ -1,77 +1,39 @@
 <!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fractale Login</title>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  </head>
+  <body>
+    <div id="loginBox">
+      <button onclick="login()">GitHubで参加する</button>
+    </div>
 
-  <!-- ① Supabase JSライブラリを最初に読み込む！ -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+      const supabase = supabase.createClient(
+        "https://◯◯◯◯.supabase.co",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBscWJja2pkbHdhcGdqcW16cW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMwNjE3MzYsImV4cCI6MjA2ODYzNzczNn0.5LHyatH__N5lnI35jCOBXqCaHJyLv421oRZk-y9rPQM"
+      );
 
-  <style>
-    body {
-      background-color: #0d0d0d;
-      color: white;
-      font-family: 'IBM Plex Mono', monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    h1 {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
-      background-color: #00e5d3;
-      color: black;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    #loginBox { display: none; }
-  </style>
-
-</head>
-<body>
-  <div id="loginBox">
-    <h1>>_ Fractale に参加する</h1>
-    <button onclick="login()">GitHub でログイン</button>
-  </div>
-
-  <!-- ② すべてのJSロジックは supabase 読み込み後に書く！ -->
-  <script>
-    let supabase = supabase.createClient(
-      "https://plqbckjdlwapgjqmzqoh.supabase.co", // あなたのSupabase URL
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBscWJja2pkbHdhcGdqcW16cW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMwNjE3MzYsImV4cCI6MjA2ODYzNzczNn0.5LHyatH__N5lnI35jCOBXqCaHJyLv421oRZk-y9rPQM"                       // あなたのanonキー
-    );
-
-    async function checkSessionAndRoute() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        // すでにログイン済み → 遷移
-        window.location.href = "https://tan334810.studio.site/competitions";
-      } else {
-        document.getElementById("loginBox").style.display = "block";
+      async function login() {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'github',
+          options: {
+            redirectTo: 'https://fractale.studio.site/competitions'
+          }
+        });
+        if (error) alert("ログインに失敗しました");
       }
-    }
 
-    async function login() {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'github',
-        options: {
-          redirectTo: 'https://tan334810.studio.site/competitions'
+      async function check() {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          window.location.href = "https://fractale.studio.site/competitions";
+        } else {
+          document.getElementById("loginBox").style.display = "block";
         }
-      });
-      if (error) alert("ログインに失敗しました");
-    }
+      }
 
-    window.addEventListener('DOMContentLoaded', checkSessionAndRoute);
-  </script>
-</body>
+      window.addEventListener("DOMContentLoaded", check);
+    </script>
+  </body>
 </html>
-
